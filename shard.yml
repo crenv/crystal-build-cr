@@ -7,6 +7,10 @@ description: |
   Facilitates the process of building, downloading, and/or installing
   Crystal.
 
+targets:
+  build:
+    main: src/build.cr
+
 # dependencies:
 #   pg:
 #     github: will/crystal-pg
