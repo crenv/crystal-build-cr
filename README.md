@@ -1,3 +1,5 @@
+![Specs](https://github.com/taylorthurlow/crystal-build-cr/workflows/specs/badge.svg)
+
 A rewrite of crystal-build in Crystal.
 
 TODO: Write an actual README

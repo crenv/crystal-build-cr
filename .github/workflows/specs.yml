@@ -1,0 +1,21 @@
+name: specs
+
+on: [push]
+
+jobs:
+  run-specs:
+    runs-on: ubuntu-latest
+
+    container:
+      image: crystallang/crystal:0.32.1
+
+    steps:
+      - uses: actions/checkout@v1
+      - name: Install dependencies
+        run: shards install
+      - name: Check formatting
+        run: crystal tool format --check
+      - name: Run tests
+        run: |
+          crystal -v
+          crystal spec --order random
