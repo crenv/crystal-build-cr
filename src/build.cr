@@ -1,6 +1,10 @@
 require "json"
 require "option_parser"
 
+require "./build/github"
+require "./build/installer"
+require "./build/source"
+require "./build/source/github_source"
 require "./build/version"
 
 module Build
@@ -25,13 +29,25 @@ module Build
   end
 
   def self.print_crystal_versions_list
-    puts "Available Crystal versions:"
-
-    text = File.read("src/releases.json")
-    versions = JSON.parse(text).as_a.map { |release| release.as_h["tag_name"] }
-
-    versions.each { |v| puts "  #{v}" }
+    Build::Github.new("crystal-lang/crystal").versions.each { |v| puts v }
   end
 end
 
-Build.parse_options
+options = Build.parse_options
+
+# Determine installation path using CRENV environment variable
+install_path = if ENV["CRENV_ROOT"]?
+                 path_string = File.join(ENV["CRENV_ROOT"], "versions")
+                 Path[path_string]
+               else
+                 puts "Expected to find crenv root in $CRENV_ROOT."
+                 exit 1
+               end
+
+version = ARGV[0]
+
+Build::Installer.new(
+  source: Build::GithubSource.new,
+  platform: "darwin",
+  arch: "x64"
+).install(ARGV[0], install_path)
