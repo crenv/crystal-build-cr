@@ -11,7 +11,7 @@ To build from scratch, clone the repository and build it with an existing Crysta
 ```bash
 git clone https://github.com/taylorthurlow/crystal-build-cr.git $CRENV_ROOT/plugins/crystal-build
 cd $CRENV_ROOT/plugins/crystal-build
-crystal build --release src/build.cr -o bin/crenv-install1
+crystal build --release src/build.cr -o bin/crenv-install
 ```
 
 ## Usage
