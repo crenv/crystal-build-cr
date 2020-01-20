@@ -49,7 +49,12 @@ install_path = if ENV["CRENV_ROOT"]?
                  exit 1
                end
 
-version = ARGV[0]
+version = if ARGV[0]?
+            ARGV[0]
+          else
+            puts "No version provided."
+            exit 1
+          end
 
 Build::Installer.new(
   source: Build::GithubSource.new,
