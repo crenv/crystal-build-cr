@@ -14,6 +14,11 @@ module Build
     OptionParser.parse do |parser|
       parser.banner = "build [options]"
 
+      parser.on("-h", "--help", "Print this help") do
+        puts parser
+        exit
+      end
+
       parser.on("-v", "--version", "Print the version number") do
         puts Build::VERSION
         exit
