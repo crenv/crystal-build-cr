@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+rm -r $CRENV_ROOT/versions/$1
