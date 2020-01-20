@@ -19,6 +19,7 @@ jobs:
         run: |
           crystal -v
           crystal build --release src/build.cr -o bin/crenv-install
+          bin/crenv-install -v
       - name: Run tests
         run: |
           crystal -v
