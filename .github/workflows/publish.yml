@@ -1,0 +1,43 @@
+name: publish
+
+on:
+  push:
+    tags:
+      - "*"
+
+jobs:
+  publish:
+    name: Publish for ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-16.04]
+        include:
+          - os: ubuntu-16.04
+            artifact_name: thicket
+            asset_name: thicket_${{ github.ref }}_linux-amd64
+      fail-fast: false
+
+    container:
+      image: crystallang/crystal:0.32.1
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v1
+      - name: Install dependencies
+        run: shards install
+      - name: Compile release
+        run: |
+          mkdir -p bin
+          crystal -v
+          crystal build src/thicket.cr --release -o bin/${{ matrix.artifact_name }}
+          chmod +x bin/${{ matrix.artifact_name }}
+      - name: Add binaries to release
+        uses: svenstaro/upload-release-action@v1-release
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: bin/${{ matrix.artifact_name }}
+          asset_name: ${{ matrix.asset_name }}
+          tag: ${{ github.ref }}
+          overwrite: true
