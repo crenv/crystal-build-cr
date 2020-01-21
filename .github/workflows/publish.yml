@@ -15,8 +15,8 @@ jobs:
         os: [ubuntu-16.04]
         include:
           - os: ubuntu-16.04
-            artifact_name: thicket
-            asset_name: thicket_${{ github.ref }}_linux-amd64
+            artifact_name: crystal-build
+            asset_name: crystal-build_${{ github.ref }}_linux-amd64
       fail-fast: false
 
     container:
@@ -31,7 +31,7 @@ jobs:
         run: |
           mkdir -p bin
           crystal -v
-          crystal build src/thicket.cr --release -o bin/${{ matrix.artifact_name }}
+          crystal build src/build.cr --release -o bin/${{ matrix.artifact_name }}
           chmod +x bin/${{ matrix.artifact_name }}
       - name: Add binaries to release
         uses: svenstaro/upload-release-action@v1-release
