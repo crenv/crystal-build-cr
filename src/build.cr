@@ -56,8 +56,27 @@ version = if ARGV[0]?
             exit 1
           end
 
+uname = `uname`.downcase.strip
+platform = if uname == "darwin"
+             "darwin"
+           elsif uname == "linux"
+             "linux"
+           else
+             puts "Warning: Unable to determine your operating system, defaulting to 'linux'."
+             "linux"
+           end
+
+long_size = `getconf LONG_BIT`.strip.to_i8?
+arch = if long_size == 64
+         "x64"
+       elsif long_size == 32
+         "x86"
+       else
+         "x64"
+       end
+
 Build::Installer.new(
   source: Build::GithubSource.new,
-  platform: "darwin",
-  arch: "x64"
+  platform: platform,
+  arch: arch
 ).install(ARGV[0], install_path)
