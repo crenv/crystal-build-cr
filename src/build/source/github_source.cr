@@ -1,3 +1,5 @@
+require "./source"
+
 module Build
   class GithubSource < Build::Source
     def initialize
