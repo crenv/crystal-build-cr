@@ -12,7 +12,7 @@ module Build
     options = {} of Symbol => String
 
     OptionParser.parse do |parser|
-      parser.banner = "build [options]"
+      parser.banner = "crenv install [options] <version>"
 
       parser.on("-h", "--help", "Print this help") do
         puts parser
