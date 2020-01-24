@@ -1,6 +1,8 @@
 require "crest"
 require "file_utils"
 
+require "./source"
+
 module Build
   class Installer
     def initialize(source : Build::Source, platform : String, arch : String)

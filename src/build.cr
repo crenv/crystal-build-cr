@@ -3,7 +3,6 @@ require "option_parser"
 
 require "./build/github"
 require "./build/installer"
-require "./build/source"
 require "./build/source/github_source"
 require "./build/version"
 

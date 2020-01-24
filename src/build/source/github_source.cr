@@ -1,4 +1,5 @@
 require "./source"
+require "../github"
 
 module Build
   class GithubSource < Build::Source
