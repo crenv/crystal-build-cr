@@ -1,4 +1,4 @@
-require "crest"
+require "http/client"
 require "file_utils"
 
 require "./source"
@@ -51,7 +51,7 @@ module Build
       if File.exists?(target_file_path)
         STDERR.puts "Target file exists, skipping download."
       else
-        Crest.get(url) { |resp| File.write(target_file_path, resp.body_io) }
+        HTTP::Client.get(url) { |resp| File.write(target_file_path, resp.body_io) }
       end
 
       target_file_path

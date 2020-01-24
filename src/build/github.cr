@@ -1,6 +1,5 @@
+require "http/client"
 require "json"
-
-require "crest"
 
 module Build
   class Github
@@ -30,13 +29,9 @@ module Build
       JSON.parse(response.body)
     end
 
-    private def fetch(path : String) : Crest::Response
-      request_url = repo_base_api_url + path
-
-      Crest::Request.new(:get,
-        request_url,
-        headers: {"Accept" => "application/vnd.github.v3+json"},
-      ).execute
+    private def fetch(path : String) : HTTP::Client::Response
+      request = HTTP::Client.new(repo_base_api_url)
+      response = request.get(path, headers: {"Accept" => "application/vnd.github.v3+json"})
     end
 
     private def repo_base_api_url : String
