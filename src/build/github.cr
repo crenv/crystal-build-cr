@@ -31,7 +31,9 @@ module Build
 
     private def fetch(path : String) : HTTP::Client::Response
       request = HTTP::Client.new(repo_base_api_url)
-      response = request.get(path, headers: {"Accept" => "application/vnd.github.v3+json"})
+      headers = HTTP::Headers.new
+      headers.add("Accept", "application/vnd.github.v3+json")
+      response = request.get(path, headers: headers)
     end
 
     private def repo_base_api_url : String
