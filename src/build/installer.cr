@@ -81,7 +81,7 @@ module Build
       tar_output.to_s
         .chomp
         .split('\n')
-        .map { |l| l.split("/").first.tr("x ", "") }
+        .map { |l| l.gsub("./", "").split("/").first.tr("x ", "") }
         .uniq
     end
 
