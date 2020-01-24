@@ -20,7 +20,7 @@ module Build
 
       # Extract the downloaded tar file, giving us the name of the top-level
       # directory that Crystal was extracted to
-      root_directory = extract_tar(target_file)
+      root_directory = extract_tar(target_file_path)
 
       # Rename the root directory to just be the version number
       move_from = File.expand_path(File.join(File.dirname(target_file_path), root_directory))
