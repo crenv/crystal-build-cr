@@ -11,6 +11,10 @@ module Build
       download_urls(crystal_version)["#{platform}_#{arch}"]
     end
 
+    def root_path(crystal_version : String) : String
+      "crystal-#{crystal_version}"
+    end
+
     def name : String
       "GitHub"
     end

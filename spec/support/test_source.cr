@@ -8,6 +8,10 @@ class TestSource < Build::Source
     "http://example.com/crystal-0.0.0.tar.gz"
   end
 
+  def root_path(crystal_version : String) : String
+    "crystal-#{crystal_version}"
+  end
+
   def name : String
     "Test"
   end

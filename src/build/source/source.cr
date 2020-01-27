@@ -10,7 +10,11 @@ module Build
       arch : String
     ) : String
 
-    # The user-facing name of the source
+    # Get the path to the main Crystal directory given the downloaded tarball
+    # structure.
+    abstract def root_path(crystal_version : String) : String
+
+    # The user-facing name of the source.
     abstract def name : String
   end
 end

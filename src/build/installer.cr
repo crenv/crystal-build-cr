@@ -20,7 +20,9 @@ module Build
 
       # Extract the downloaded tar file, giving us the name of the top-level
       # directory that Crystal was extracted to
-      root_directory = extract_tar(target_file_path)
+      system("tar xf #{target_file_path} -C #{File.dirname(target_file_path)}")
+
+      root_directory = @source.root_path(crystal_version)
 
       # Rename the root directory to just be the version number
       move_from = File.expand_path(File.join(File.dirname(target_file_path), root_directory))
@@ -55,45 +57,6 @@ module Build
       end
 
       target_file_path
-    end
-
-    # Extract the tar file to the directory it is contained within, and return
-    # the name of the top-level directory that is the main crystal directory we
-    # just extracted.
-    private def extract_tar(target_file : String) : String
-      # Capture stderr - tar outputs all verbose logging to stderr, even if
-      # there are no errors
-      stderr = IO::Memory.new
-      status = Process.run(
-        "tar",
-        args: ["xvf", target_file, "-C", File.dirname(target_file)],
-        error: stderr
-      )
-
-      root_directories = root_directories_from_tar_output(stderr.to_s)
-
-      select_crystal_root_directory(root_directories)
-    end
-
-    # Parse the output of a verbose "tar" run and use it to determine the
-    # top-level root directory names that were created
-    private def root_directories_from_tar_output(tar_output : String) : Array(String)
-      tar_output.to_s
-        .chomp
-        .split('\n')
-        .map { |l| l.gsub("./", "").split("/").first.tr("x ", "") }
-        .uniq
-    end
-
-    # Of all top-level *directory_names* in a provided list, find the one that
-    # is most likely the main Crystal directory. Currently distribution
-    # tarballs only have one directory in them, but we do it this way to
-    # hopefully avoid any breaks in the future, if the tarball structure
-    # changes.
-    private def select_crystal_root_directory(directory_names : Array(String)) : String
-      # Look for "crystal" in the name, but fall back to the first directory if
-      # we can't find that
-      directory_names.find { |dn| dn =~ /crystal/ } || directory_names.first
     end
   end
 end
