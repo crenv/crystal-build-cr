@@ -17,21 +17,43 @@ module Build
       url = @source.url_for(crystal_version, @platform, @arch)
       puts "Downloading from #{@source.name} with URL: #{url}"
 
-      target_file_path = prepare_file_download(install_directory.to_s, url)
+      tarball_path = prepare_file_download(url)
+      # Extract Crystal to a subdirectory of the main temp directory
+      target_subdirectory = File.join(File.dirname(tarball_path), "crystal-build-" + Random::Secure.hex(3))
+      FileUtils.mkdir_p(target_subdirectory)
 
-      # Extract the downloaded tar file, giving us the name of the top-level
-      # directory that Crystal was extracted to
-      system("tar xf #{target_file_path} -C #{File.dirname(target_file_path)}")
+      # TODO: Should probably utilize some sort of checksum comparison here
+      `tar xf '#{tarball_path}' -C '#{target_subdirectory}'`
 
-      root_directory = @source.root_path(crystal_version)
+      unless $?.success?
+        puts "There was an issue extracting the downloaded tarball."
+        exit 1
+      end
+
+      unless (root_dir = Dir.entries(target_subdirectory).find { |dir| dir =~ /crystal/ })
+        STDERR.puts "Extracted tarball but could not determine the directory containing Crystal."
+        exit 1
+      end
+
+      source = File.expand_path(File.join(target_subdirectory, root_dir))
+      crystal_dir = File.expand_path(File.join(Installer.install_root, crystal_version))
+      system("mv #{source} #{crystal_dir}")
 
       # Rename the root directory to just be the version number
       move_from = File.expand_path(File.join(File.dirname(target_file_path), root_directory))
       move_to = File.expand_path(File.join(File.dirname(target_file_path), crystal_version))
       system("mv #{move_from} #{move_to}")
 
-      # Remove the tar file now that we're done with it
-      FileUtils.rm(target_file_path)
+    # Get the crenv versions directory path.
+    def self.install_root : String
+      root = ENV["CRENV_ROOT"]?
+
+      if root.nil?
+        STDERR.puts "CRENV_ROOT is not set."
+        exit 1
+      end
+
+      File.join(root, "versions")
     end
 
     # Given the *url* for the tarball to be downloaded and the directory in
