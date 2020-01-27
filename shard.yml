@@ -13,6 +13,11 @@ targets:
   build:
     main: src/build.cr
 
+dependencies:
+  crest:
+    github: mamantoha/crest
+    version: ~> 0.23.2
+
 development_dependencies:
   webmock:
     github: manastech/webmock.cr

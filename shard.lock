@@ -1,5 +1,13 @@
 version: 1.0
 shards:
+  crest:
+    github: mamantoha/crest
+    version: 0.23.2
+
+  http-client-digest_auth:
+    github: mamantoha/http-client-digest_auth
+    version: 0.3.0
+
   mocks:
     github: DocSpring/mocks.cr
     commit: b098c6ae8a34509df88baf4d3664471cd223bdfe

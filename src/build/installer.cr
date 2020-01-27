@@ -1,7 +1,8 @@
-require "http/client"
 require "file_utils"
 
 require "./source"
+
+require "crest"
 
 module Build
   class Installer
@@ -35,28 +36,26 @@ module Build
 
     # Given the *url* for the tarball to be downloaded and the directory in
     # which to install Crystal, do some preparation for the downloading
-    # process, and return the absolute path to where the file should be
-    # downloaded.
-    private def prepare_file_download(install_directory : String, url : String) : String
+    # process, and return the path to the downloaded tarball.
+    private def prepare_file_download(url : String) : String
       filename = url.split("/").last
-      target_file_path = File.join(install_directory, filename)
-      Dir.mkdir_p(File.dirname(target_file_path)) # Create the directory if necessary
+      tarball_path = File.join(Dir.tempdir, filename)
 
       # Check if the target file location is writable
-      if !File.writable?(File.dirname(target_file_path))
-        puts "Target not writable: #{File.dirname(target_file_path)}"
+      if !File.writable?(File.dirname(tarball_path))
+        puts "Target not writable: #{File.dirname(tarball_path)}"
         exit 1
       end
 
       # Check if we've already downloaded the file
       # TODO: Should probably utilize some sort of checksum comparison here
-      if File.exists?(target_file_path)
+      if File.exists?(tarball_path)
         STDERR.puts "Target file exists, skipping download."
       else
-        HTTP::Client.get(url) { |resp| File.write(target_file_path, resp.body_io) }
+        Crest.get(url) { |resp| File.write(tarball_path, resp.body_io) }
       end
 
-      target_file_path
+      tarball_path
     end
   end
 end
