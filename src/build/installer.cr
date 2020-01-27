@@ -1,6 +1,7 @@
 require "file_utils"
 
 require "./source"
+require "./shards_builder"
 
 require "crest"
 
@@ -39,10 +40,18 @@ module Build
       crystal_dir = File.expand_path(File.join(Installer.install_root, crystal_version))
       system("mv #{source} #{crystal_dir}")
 
-      # Rename the root directory to just be the version number
-      move_from = File.expand_path(File.join(File.dirname(target_file_path), root_directory))
-      move_to = File.expand_path(File.join(File.dirname(target_file_path), crystal_version))
-      system("mv #{move_from} #{move_to}")
+      # Install Shards if necessary
+      target_shards_path = File.join(crystal_dir, "bin", "shards")
+      if File.exists?(target_shards_path)
+        puts "Found existing shards binary, skipping shards build & install."
+      else
+        crystal_binary = File.join(crystal_dir, "bin", "crystal")
+        if !ShardsBuilder.build(crystal_binary, target_shards_path)
+          STDERR.puts "Shards installation failed."
+          exit 1
+        end
+      end
+    end
 
     # Get the crenv versions directory path.
     def self.install_root : String
