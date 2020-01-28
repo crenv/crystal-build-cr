@@ -39,7 +39,7 @@ module Build
       FileUtils.mkdir_p(Installer.install_root)
       source = File.expand_path(File.join(target_subdirectory, root_dir))
       crystal_dir = File.expand_path(File.join(Installer.install_root, crystal_version))
-      File.rename(source, crystal_dir)
+      system("mv #{source} #{crystal_dir}")
 
       # Install Shards if necessary
       if install_shards
