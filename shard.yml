@@ -3,6 +3,8 @@ version: 0.1.1
 
 author: Taylor Thurlow <taylorthurlow@me.com>
 
+crystal: 0.32.1
+
 description: |
   Facilitates the process of building, downloading, and/or installing
   Crystal.
