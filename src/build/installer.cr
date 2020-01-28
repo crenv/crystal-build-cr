@@ -13,8 +13,8 @@ module Build
       @arch = arch
     end
 
-    # Install a specific *crystal_version* to an *install_directory*.
-    def install(crystal_version : String, install_directory : Path)
+    # Install a specific *crystal_version* to crenv.
+    def install(crystal_version : String, install_shards : Bool = true)
       url = @source.url_for(crystal_version, @platform, @arch)
       puts "Downloading from #{@source.name} with URL: #{url}"
 
@@ -36,19 +36,22 @@ module Build
         exit 1
       end
 
+      FileUtils.mkdir_p(Installer.install_root)
       source = File.expand_path(File.join(target_subdirectory, root_dir))
       crystal_dir = File.expand_path(File.join(Installer.install_root, crystal_version))
-      system("mv #{source} #{crystal_dir}")
+      File.rename(source, crystal_dir)
 
       # Install Shards if necessary
-      target_shards_path = File.join(crystal_dir, "bin", "shards")
-      if File.exists?(target_shards_path)
-        puts "Found existing shards binary, skipping shards build & install."
-      else
-        crystal_binary = File.join(crystal_dir, "bin", "crystal")
-        if !ShardsBuilder.build(crystal_binary, target_shards_path)
-          STDERR.puts "Shards installation failed."
-          exit 1
+      if install_shards
+        target_shards_path = File.join(crystal_dir, "bin", "shards")
+        if File.exists?(target_shards_path)
+          puts "Found existing shards binary, skipping shards build & install."
+        else
+          crystal_binary = File.join(crystal_dir, "bin", "crystal")
+          if !ShardsBuilder.build(crystal_binary, target_shards_path)
+            STDERR.puts "Shards installation failed."
+            exit 1
+          end
         end
       end
     end

@@ -39,15 +39,6 @@ end
 
 options = Build.parse_options
 
-# Determine installation path using CRENV environment variable
-install_path = if ENV["CRENV_ROOT"]?
-                 path_string = File.join(ENV["CRENV_ROOT"], "versions")
-                 Path[path_string]
-               else
-                 puts "Expected to find crenv root in $CRENV_ROOT."
-                 exit 1
-               end
-
 version = if ARGV[0]?
             ARGV[0]
           else
@@ -78,4 +69,4 @@ Build::Installer.new(
   source: Build::GithubSource.new,
   platform: platform,
   arch: arch
-).install(ARGV[0], install_path)
+).install(ARGV[0])

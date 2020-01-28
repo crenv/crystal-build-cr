@@ -18,12 +18,4 @@ dependencies:
     github: mamantoha/crest
     version: ~> 0.23.2
 
-development_dependencies:
-  webmock:
-    github: manastech/webmock.cr
-    version: ~> 0.12.1
-  mocks:
-    github: DocSpring/mocks.cr
-    branch: updates_for_0.31.1
-
 license: MIT
