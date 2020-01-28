@@ -7,8 +7,6 @@ description: |
   Facilitates the process of building, downloading, and/or installing
   Crystal.
 
-crystal: 0.31.1
-
 targets:
   build:
     main: src/build.cr

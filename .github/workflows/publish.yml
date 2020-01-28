@@ -20,7 +20,7 @@ jobs:
       fail-fast: false
 
     container:
-      image: crystallang/crystal:0.31.1
+      image: crystallang/crystal:0.32.1
 
     steps:
       - name: Checkout code
