@@ -42,8 +42,12 @@ options = Build.parse_options
 version = if ARGV[0]?
             ARGV[0]
           else
-            puts "No version provided."
-            exit 1
+            if File.exists?(".crystal-version")
+              File.read(".crystal-version").strip
+            else
+              puts "No version provided."
+              exit 1
+            end
           end
 
 uname = `uname`.downcase.strip
@@ -69,4 +73,4 @@ Build::Installer.new(
   source: Build::GithubSource.new,
   platform: platform,
   arch: arch
-).install(ARGV[0])
+).install(version)
