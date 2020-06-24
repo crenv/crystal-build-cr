@@ -48,7 +48,7 @@ module Build
           puts "Found existing shards binary, skipping shards build & install."
         else
           crystal_binary = File.join(crystal_dir, "bin", "crystal")
-          if !ShardsBuilder.build(crystal_binary, target_shards_path)
+          if !ShardsBuilder.build(crystal_version, crystal_binary, target_shards_path)
             STDERR.puts "Shards installation failed."
             exit 1
           end
