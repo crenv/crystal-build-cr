@@ -54,6 +54,8 @@ module Build
           end
         end
       end
+
+      puts "Crystal #{crystal_version} installed successfully."
     end
 
     # Get the crenv versions directory path.
