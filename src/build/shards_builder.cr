@@ -87,7 +87,7 @@ module Build
       Dir.cd(build_directory)
 
       # Clone the repo and build
-      system("git clone #{git_url}")
+      system("git clone #{git_url} --quiet")
 
       unless $?.success?
         STDERR.puts "Clone failed."
@@ -100,7 +100,7 @@ module Build
       # Switch to the appropriate version branch based on the version of Shards
       # we want to install
       shards_version = shards_version_by_crystal(crystal_version)
-      system("git checkout v#{shards_version}")
+      system("git checkout v#{shards_version} --quiet")
 
       unless $?.success?
         STDERR.puts "Failed to switch to Shards version branch 'v#{shards_version}'."
