@@ -62,7 +62,7 @@ platform = if uname == "darwin"
            elsif uname == "linux"
              "linux"
            else
-             puts "Warning: Unable to determine your operating system, defaulting to 'linux'."
+             STDERR.puts "Unable to determine your operating system, defaulting to 'linux'."
              "linux"
            end
 

@@ -78,7 +78,10 @@ module Build
     # path. The provided path should include the binary name. Returns a boolean
     # representing the success or failure of the build process.
     def self.build(crystal_version : String, crystal_binary : String, target_binary_path : String, options : Hash(Symbol, String | Nil)) : Bool
-      raise "Unable to find git executable." unless has_git?
+      unless has_git?
+        STDERR.puts "Unable to find git executable, which is required to install Shards."
+        return false
+      end
 
       # Change to a new temporary directory, saving our old spot
       original_working_dir = Dir.current
@@ -91,7 +94,7 @@ module Build
 
       unless $?.success?
         STDERR.puts "Clone failed."
-        exit 1
+        return false
       end
 
       # CD into the newly cloned repository
@@ -99,21 +102,21 @@ module Build
 
       # Switch to the appropriate version branch based on the version of Shards
       # we want to install
-      shards_version = shards_version_by_crystal(crystal_version)
-      system("git checkout v#{shards_version} --quiet")
+
+      if (shards_version = shards_version_by_crystal(crystal_version)).empty?
+        return false
+      end
+
+      system("git checkout v#{shards_version}#{" --quiet" unless options[:verbose]}")
 
       unless $?.success?
         STDERR.puts "Failed to switch to Shards version branch 'v#{shards_version}'."
-        exit 1
+        return false
       end
 
       # Compile and build Shards
       system("make CRYSTAL=#{crystal_binary} CRFLAGS=--release")
-
-      unless $?.success?
-        STDERR.puts "Shards build failed."
-        exit 1
-      end
+      return false unless $?.success?
 
       FileUtils.cp("bin/shards", target_binary_path)
 
@@ -152,9 +155,10 @@ module Build
             ERROR: Cannot build Shards for a version of Crystal older than
             #{earliest_known_crystal}. You asked for Crystal #{looking_for}.
           WARNING_MSG
-          exit 1
+
+          return ""
         else
-          raise "This is a bug, you should never see this."
+          return ""
         end
       end
     end

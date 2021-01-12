@@ -28,7 +28,7 @@ module Build
       `tar xf '#{tarball_path}' -C '#{target_subdirectory}'`
 
       unless $?.success?
-        puts "There was an issue extracting the downloaded tarball."
+        STDERR.puts "There was an issue extracting the downloaded tarball."
         exit 1
       end
 
@@ -65,7 +65,7 @@ module Build
       root = ENV["CRENV_ROOT"]?
 
       if root.nil?
-        STDERR.puts "CRENV_ROOT is not set."
+        STDERR.puts "The CRENV_ROOT environment variable is not set."
         exit 1
       end
 
@@ -81,7 +81,7 @@ module Build
 
       # Check if the target file location is writable
       if !File.writable?(File.dirname(tarball_path))
-        puts "Target not writable: #{File.dirname(tarball_path)}"
+        STDERR.puts "Target not writable: #{File.dirname(tarball_path)}"
         exit 1
       end
 
