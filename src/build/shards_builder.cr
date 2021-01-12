@@ -114,8 +114,20 @@ module Build
         return false
       end
 
-      # Compile and build Shards
-      system("make CRYSTAL=#{crystal_binary} CRFLAGS=--release")
+      # Compile and build Shards - the make syntax changes over time so we need
+      # to pick the right one
+      shards_semantic_version = SemanticVersion.parse(shards_version)
+      make_command = if shards_semantic_version >= SemanticVersion.parse("0.12.0")
+                       "make CRYSTAL=#{crystal_binary} release=1 #{" > /dev/null" unless options[:verbose]}"
+                     elsif shards_semantic_version >= SemanticVersion.parse("0.11.0")
+                       "make CRYSTAL=\"#{crystal_binary} --release\"#{" > /dev/null" unless options[:verbose]}"
+                     else
+                       "make CRYSTAL=#{crystal_binary} CRFLAGS=--release#{" > /dev/null" unless options[:verbose]}"
+                     end
+
+      puts make_command if options[:verbose]
+      system(make_command)
+
       return false unless $?.success?
 
       FileUtils.cp("bin/shards", target_binary_path)
