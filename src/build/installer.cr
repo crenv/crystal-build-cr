@@ -7,16 +7,17 @@ require "crest"
 
 module Build
   class Installer
-    def initialize(source : Build::Source, platform : String, arch : String)
+    def initialize(source : Build::Source, platform : String, arch : String, options : Hash(Symbol, String | Nil))
       @source = source
       @platform = platform
       @arch = arch
+      @options = options
     end
 
     # Install a specific *crystal_version* to crenv.
     def install(crystal_version : String, install_shards : Bool = true)
       url = @source.url_for(crystal_version, @platform, @arch)
-      puts "Downloading from #{@source.name} with URL: #{url}"
+      puts "Downloading from #{@source.name} with URL: #{url}" if @options[:verbose]
 
       tarball_path = prepare_file_download(url)
       # Extract Crystal to a subdirectory of the main temp directory
@@ -45,10 +46,11 @@ module Build
       if install_shards
         target_shards_path = File.join(crystal_dir, "bin", "shards")
         if File.exists?(target_shards_path)
-          puts "Found existing shards binary, skipping shards build & install."
+          puts "Found existing shards binary, skipping shards build & install." if @options[:verbose]
         else
           crystal_binary = File.join(crystal_dir, "bin", "crystal")
-          if !ShardsBuilder.build(crystal_version, crystal_binary, target_shards_path)
+
+          if !ShardsBuilder.build(crystal_version, crystal_binary, target_shards_path, @options)
             STDERR.puts "Shards installation failed."
             exit 1
           end
@@ -86,7 +88,7 @@ module Build
       # Check if we've already downloaded the file
       # TODO: Should probably utilize some sort of checksum comparison here
       if File.exists?(tarball_path)
-        STDERR.puts "Target file exists, skipping download."
+        puts "Target file exists, skipping download." if @options[:verbose]
       else
         Crest.get(url) { |resp| File.write(tarball_path, resp.body_io) }
       end

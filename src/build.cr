@@ -7,8 +7,10 @@ require "./build/source/github_source"
 require "./build/version"
 
 module Build
+  @@options = {} of Symbol => String
+
   def self.parse_options
-    options = {} of Symbol => String
+    options = Hash(Symbol, String | Nil).new(default_value: nil)
 
     OptionParser.parse do |parser|
       parser.banner = "crenv install [options] <version>"
@@ -18,7 +20,11 @@ module Build
         exit
       end
 
-      parser.on("-v", "--version", "Print the version number") do
+      parser.on("-v", "--verbose", "Enable verbose output") do
+        options[:verbose] = "true"
+      end
+
+      parser.on("--version", "Print the version number") do
         puts Build::VERSION
         exit
       end
@@ -72,5 +78,6 @@ arch = if long_size == 64
 Build::Installer.new(
   source: Build::GithubSource.new,
   platform: platform,
-  arch: arch
+  arch: arch,
+  options: options
 ).install(version)

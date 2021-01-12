@@ -10,13 +10,19 @@ describe Build::Installer do
     Build::Installer.new(
       source: TestSource.new,
       platform: "darwin",
-      arch: "x64"
+      arch: "x64",
+      options: Hash(Symbol, String | Nil).new(default_value: nil),
     ).should_not be_nil
   end
 
   it "installs" do
     tarball_path = "/Users/taylorthurlow/Code/crystal-build-cr/spec/fixtures/crystal-0.0.0.tar.gz"
-    installer = Build::Installer.new(TestSource.new, "darwin", "x64")
+    installer = Build::Installer.new(
+      TestSource.new,
+      "darwin",
+      "x64",
+      options: Hash(Symbol, String | Nil).new(default_value: nil),
+    )
 
     ENV["CRENV_ROOT"] = Path["tmp/crenv"].to_s
     install_path = File.join(ENV["CRENV_ROOT"], "versions")

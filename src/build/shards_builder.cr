@@ -77,7 +77,7 @@ module Build
     # Builds Shards using Crystal, saving the resulting binary to the provided
     # path. The provided path should include the binary name. Returns a boolean
     # representing the success or failure of the build process.
-    def self.build(crystal_version : String, crystal_binary : String, target_binary_path : String) : Bool
+    def self.build(crystal_version : String, crystal_binary : String, target_binary_path : String, options : Hash(Symbol, String | Nil)) : Bool
       raise "Unable to find git executable." unless has_git?
 
       # Change to a new temporary directory, saving our old spot
@@ -87,7 +87,7 @@ module Build
       Dir.cd(build_directory)
 
       # Clone the repo and build
-      system("git clone #{git_url} --quiet")
+      system("git clone #{git_url}#{" --quiet" unless options[:verbose]}")
 
       unless $?.success?
         STDERR.puts "Clone failed."

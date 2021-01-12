@@ -15,11 +15,11 @@ jobs:
         run: shards install
       - name: Check formatting
         run: crystal tool format --check
-      - name: Check build
+      - name: Build
         run: |
           crystal -v
           crystal build --release src/build.cr -o bin/crenv-install
-          bin/crenv-install -v
+          bin/crenv-install --version
       - name: Run tests
         run: |
           crystal -v
