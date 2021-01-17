@@ -1,10 +1,10 @@
-require "./source"
+require "./tarball_source"
 require "../github"
 
 module Build
-  class GithubSource < Build::Source
-    def initialize
-      @github = Build::Github.new("crystal-lang/crystal")
+  class GithubSource < Build::TarballSource
+    def initialize(repo : String)
+      @github = Build::Github.new(repo)
     end
 
     def url_for(crystal_version : String, platform : String, arch : String) : String
