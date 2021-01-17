@@ -1,4 +1,4 @@
-![Specs](https://github.com/taylorthurlow/crystal-build-cr/workflows/specs/badge.svg)
+![Specs](https://github.com/crenv/crystal-build-cr/workflows/specs/badge.svg)
 
 ## crystal-build
 
