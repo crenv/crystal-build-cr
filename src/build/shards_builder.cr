@@ -6,8 +6,11 @@ module Build
     # Map all crystal versions to an applicable version of shards to be
     # installed alongside it.
     VERSION_MAP = {
-      "0.35.1" => "0.12.0",
-      "0.35.0" => "0.12.0",
+      "1.0.0"  => "0.14.1",
+      "0.36.1" => "0.14.1",
+      "0.36.0" => "0.14.1",
+      "0.35.1" => "0.14.1",
+      "0.35.0" => "0.14.1",
       "0.34.0" => "0.11.1",
       "0.33.0" => "0.9.0",
       "0.32.1" => "0.9.0",
