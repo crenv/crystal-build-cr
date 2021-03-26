@@ -1,21 +1,26 @@
 require "file_utils"
 
-require "./source"
-require "./shards_builder"
+require "./installer"
+require "../shards_builder"
+require "../source"
 
 require "crest"
 
-module Build
-  class Installer
-    def initialize(source : Build::Source, platform : String, arch : String, options : Hash(Symbol, String | Nil))
+module Build::Installer
+  class Tarball < Build::Installer::Base
+    def initialize(
+      source : Build::TarballSource,
+      platform : String,
+      arch : String,
+      options : Hash(Symbol, String | Nil)
+    )
       @source = source
       @platform = platform
       @arch = arch
       @options = options
     end
 
-    # Install a specific *crystal_version* to crenv.
-    def install(crystal_version : String, install_shards : Bool = true)
+    def install(crystal_version : String, install_shards : Bool = true) : Void
       url = @source.url_for(crystal_version, @platform, @arch)
       puts "Downloading from #{@source.name} with URL: #{url}" if @options[:verbose]
 
@@ -37,9 +42,14 @@ module Build
         exit 1
       end
 
-      FileUtils.mkdir_p(Installer.install_root)
+      unless (install_root = Installer::Base.install_root)
+        STDERR.puts "Unable to determine install root. Is CRENV_ROOT set?"
+        exit 1
+      end
+
+      FileUtils.mkdir_p(install_root)
       source = File.expand_path(File.join(target_subdirectory, root_dir))
-      crystal_dir = File.expand_path(File.join(Installer.install_root, crystal_version))
+      crystal_dir = File.expand_path(File.join(install_root, crystal_version))
       system("mv #{source} #{crystal_dir}")
 
       # Install Shards if necessary
@@ -58,18 +68,6 @@ module Build
       end
 
       puts "Crystal #{crystal_version} installed successfully."
-    end
-
-    # Get the crenv versions directory path.
-    def self.install_root : String
-      root = ENV["CRENV_ROOT"]?
-
-      if root.nil?
-        STDERR.puts "The CRENV_ROOT environment variable is not set."
-        exit 1
-      end
-
-      File.join(root, "versions")
     end
 
     # Given the *url* for the tarball to be downloaded and the directory in

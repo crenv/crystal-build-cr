@@ -29,6 +29,7 @@ crenv install [options] <version>
     -v, --verbose                    Enable verbose output
     --version                        Print the version number
     -l, --list                       Print a list of available Crystal versions
+    -s, --from-source                Build and install from source
 ```
 
 Install a specific version of Crystal with:
@@ -43,3 +44,6 @@ If you compile from source you should also have access to `crenv uninstall <vers
 echo "rm -r $CRENV_ROOT/versions/$1" > $CRENV_ROOT/plugins/crystal-build/bin/crenv-uninstall
 ```
 
+#### Building from source
+
+Passing the `--from-source` flag will enable building Crystal from source, instead of from a pre-built binary release. Building software is complicated (an entire programming language, even moreso) and as such things might not always go smoothly, and there are more requirements. Those requirements will vary depending on what version of Crystal you are trying to build. You can get a general idea of the requirements from [this Crystal help page](https://crystal-lang.org/install/from_sources/).
