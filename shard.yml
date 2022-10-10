@@ -3,7 +3,7 @@ version: 0.1.5
 
 author: Taylor Thurlow <taylorthurlow@me.com>
 
-crystal: 0.35.1
+crystal: 1.6
 
 description: |
   Facilitates the process of building, downloading, and/or installing
@@ -16,6 +16,6 @@ targets:
 dependencies:
   crest:
     github: mamantoha/crest
-    version: ~> 0.26.0
+    version: ~> 1.3.6
 
 license: MIT
