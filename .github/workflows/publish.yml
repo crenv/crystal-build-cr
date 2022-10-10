@@ -12,9 +12,9 @@ jobs:
 
     strategy:
       matrix:
-        os: [ubuntu-16.04]
+        os: [ubuntu-20.04]
         include:
-          - os: ubuntu-16.04
+          - os: ubuntu-20.04
             artifact_name: crystal-build
             asset_name: crystal-build_${{ github.ref }}_linux-amd64
       fail-fast: false
