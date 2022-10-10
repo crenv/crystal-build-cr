@@ -28,6 +28,7 @@ crenv install [options] <version>
     -h, --help                       Print this help
     -v, --verbose                    Enable verbose output
     --version                        Print the version number
+    --shards-version=SHARDS_VERSION  Specify a version of Shards to be installed, if it is not already present
     -l, --list                       Print a list of available Crystal versions
 ```
 

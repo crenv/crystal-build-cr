@@ -119,7 +119,7 @@ module Build
       # Switch to the appropriate version branch based on the version of Shards
       # we want to install
 
-      if (shards_version = shards_version_by_crystal(crystal_version)).empty?
+      if (shards_version = options[:shards_version] || shards_version_by_crystal(crystal_version)).empty?
         return false
       end
 

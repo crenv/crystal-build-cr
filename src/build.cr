@@ -24,6 +24,15 @@ module Build
         options[:verbose] = "true"
       end
 
+      parser.on("--shards-version=SHARDS_VERSION", "Install a specific shards version") do |v|
+        SemanticVersion.parse(v.strip)
+
+        options[:shards_version] = v.strip
+      rescue ArgumentError
+        STDERR.puts "Invalid Shards version: #{v.strip}"
+        exit 1
+      end
+
       parser.on("--version", "Print the version number") do
         if {{ flag?(:release) }}
           puts Build::VERSION
