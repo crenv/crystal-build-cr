@@ -25,7 +25,12 @@ module Build
       end
 
       parser.on("--version", "Print the version number") do
-        puts Build::VERSION
+        if {{ flag?(:release) }}
+          puts Build::VERSION
+        else
+          puts "#{Build::VERSION}-develop"
+        end
+
         exit
       end
 
